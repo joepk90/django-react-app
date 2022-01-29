@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Container from './components/common/container';
 import Section from './components/common/section';
 import logo from './logo.svg';
@@ -16,6 +18,14 @@ const handleFormSubmit = async (event) => {
       method: "PUT",
       body: JSON.stringify(event.formData)
     })
+
+  const { status } = response;
+
+  if (status && status === 200) {
+    toast.success("Success!");
+  } else {
+    toast.error("Something went wrong...");
+  }
 
 }
 
@@ -58,6 +68,7 @@ function App() {
 
   return (
     <div className="App">
+      <ToastContainer />
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         Django React App - Form Example
