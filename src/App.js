@@ -1,12 +1,60 @@
+import React, { useState, useEffect } from 'react';
 import Container from './components/common/container';
 import Section from './components/common/section';
 import logo from './logo.svg';
 import './App.css';
 import Form from "@rjsf/core";
 
+const handleFormSubmit = async (event) => {
+
+  const response = await fetch("http://127.0.0.1:8000/blog/posts/1/",
+    {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "PUT",
+      body: JSON.stringify(event.formData)
+    })
+
+}
+
+const renderForm = (serializer, formData) => {
+
+  if (!serializer || !formData) return
+
+  return (
+    <Section>
+      <Container>
+        <Form
+          schema={serializer.schema}
+          uiSchema={serializer.uiSchema}
+          formData={formData}
+          onSubmit={handleFormSubmit}
+        />
+      </Container>
+    </Section>
+  )
+}
+
 function App() {
 
+  const [serializer, setSerializer] = React.useState(null);
+  const [formData, setFormData] = React.useState(null);
 
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/blog/forms/1/')
+      .then(results => results.json())
+      .then(data => {
+
+        console.log(data);
+
+        const { formData, serializer } = data;
+
+        setSerializer(serializer);
+        setFormData(formData);
+      });
+  }, [])
 
   return (
     <div className="App">
@@ -15,16 +63,8 @@ function App() {
         Django React App - Form Example
       </header>
 
-      <Section>
-        <Container>
-          <Form
-            schema={{}}
-            uiSchema={{}}
-            formData={{}}
-          // widgets={widgets}
-          />
-        </Container>
-      </Section>
+      {renderForm(serializer, formData)}
+
     </div>
   );
 }
