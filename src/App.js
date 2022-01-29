@@ -3,7 +3,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Container from './components/common/container';
 import Section from './components/common/section';
-import logo from './logo.svg';
 import './App.css';
 import Form from "@rjsf/core";
 
@@ -76,8 +75,11 @@ function App() {
     <div className="App">
       <ToastContainer />
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        Django React App - Form Example
+        <Section>
+          <Container>
+            <h1>Django React App - Form Example</h1>
+          </Container>
+        </Section>
       </header>
 
       {renderForm(serializer, formData)}
