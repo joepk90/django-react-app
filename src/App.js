@@ -9,6 +9,10 @@ import Form from "@rjsf/core";
 
 const handleFormSubmit = async (event) => {
 
+  if (!event || !event.formData) {
+    toast.error("Something went wrong...");
+  }
+
   const response = await fetch("http://127.0.0.1:8000/blog/posts/1/",
     {
       headers: {
@@ -18,6 +22,10 @@ const handleFormSubmit = async (event) => {
       method: "PUT",
       body: JSON.stringify(event.formData)
     })
+    .then((result) => result.json())
+    .then((result) => {
+      toast.error(result.non_field_errors[0]);
+    });
 
   const { status } = response;
 
@@ -56,8 +64,6 @@ function App() {
     fetch('http://127.0.0.1:8000/blog/forms/1/')
       .then(results => results.json())
       .then(data => {
-
-        console.log(data);
 
         const { formData, serializer } = data;
 
