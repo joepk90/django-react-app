@@ -6,13 +6,16 @@ import Section from './components/common/section';
 import './App.css';
 import Form from "@rjsf/core";
 
+// .env: REACT_APP_API_URL=http://domain.com
+const HOST = process.env.REACT_APP_API_URL
+
 const handleFormSubmit = async (event) => {
 
   if (!event || !event.formData) {
     toast.error("Something went wrong...");
   }
 
-  const response = await fetch("http://127.0.0.1:8000/blog/posts/1/",
+  const response = await fetch(HOST + "/blog/posts/1/",
     {
       headers: {
         'Accept': 'application/json',
@@ -60,7 +63,7 @@ function App() {
   const [formData, setFormData] = React.useState(null);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/blog/forms/1/')
+    fetch(HOST + '/blog/forms/1/')
       .then(results => results.json())
       .then(data => {
 
