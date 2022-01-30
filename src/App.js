@@ -59,8 +59,8 @@ const renderForm = (serializer, formData) => {
 
 function App() {
 
-  const [serializer, setSerializer] = React.useState(null);
-  const [formData, setFormData] = React.useState(null);
+  const [serializer, setSerializer] = useState(null);
+  const [formData, setFormData] = useState(null);
 
   useEffect(() => {
     fetch(HOST + '/blog/forms/1/')
