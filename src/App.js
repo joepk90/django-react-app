@@ -18,7 +18,14 @@ function App() {
         </Section>
       </header>
 
-      <DjangoForm />
+      <main>
+        <Section>
+          <Container>
+            <DjangoForm />
+          </Container>
+        </Section>
+      </main>
+
 
     </div>
   );

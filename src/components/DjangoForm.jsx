@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Container from './common/container';
-import Section from './common/section';
 import SubmitButton from './SubmitButton';
 import Form from "@rjsf/core";
 
@@ -94,19 +92,16 @@ class DjangoForm extends Component {
         if (!schema || !uiSchema || !formData) return
 
         return (
-            <Section>
-                <Container>
-                    <Form
-                        disabled={formDisabled}
-                        schema={schema}
-                        uiSchema={uiSchema}
-                        formData={formData}
-                        onSubmit={this.handleFormSubmit}
-                    >
-                        <SubmitButton disabled={formDisabled} />
-                    </Form>
-                </Container>
-            </Section>
+            <Form
+                disabled={formDisabled}
+                schema={schema}
+                uiSchema={uiSchema}
+                formData={formData}
+                onSubmit={this.handleFormSubmit}
+            >
+                <SubmitButton disabled={formDisabled} />
+            </Form>
+
         )
     }
 }
