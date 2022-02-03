@@ -85,23 +85,53 @@ class DjangoForm extends Component {
 
     }
 
+    renderLastUpdate = () => {
+
+        const { last_update: lastUpdate } = this.state.formData;
+
+        if (!lastUpdate) return
+
+        const dateTimeObj = new Date(Date.parse(lastUpdate));
+
+        const time = dateTimeObj.toLocaleTimeString();
+        const date = dateTimeObj.toLocaleString('default', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+        });
+
+
+
+        return (
+            <p>The post can be updated once an hour, by anyone. The last update was on:<br /> {date.toString()} at {time.toString()}.</p>
+        )
+    }
+
     render() {
 
         const { schema, uiSchema, formData, formDisabled } = this.state;
 
         if (!schema || !uiSchema || !formData) return
 
-        return (
-            <Form
-                disabled={formDisabled}
-                schema={schema}
-                uiSchema={uiSchema}
-                formData={formData}
-                onSubmit={this.handleFormSubmit}
-            >
-                <SubmitButton disabled={formDisabled} />
-            </Form>
 
+
+        return (
+            <React.Fragment>
+
+                {this.renderLastUpdate()}
+
+                <Form
+                    disabled={formDisabled}
+                    schema={schema}
+                    uiSchema={uiSchema}
+                    formData={formData}
+                    onSubmit={this.handleFormSubmit}
+                >
+                    <SubmitButton disabled={formDisabled} />
+                </Form>
+
+            </React.Fragment>
         )
     }
 }
