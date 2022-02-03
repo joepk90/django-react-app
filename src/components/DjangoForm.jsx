@@ -3,6 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Container from './common/container';
 import Section from './common/section';
+import SubmitButton from './SubmitButton';
 import Form from "@rjsf/core";
 
 // .env: REACT_APP_API_URL=http://domain.com
@@ -13,6 +14,7 @@ class DjangoForm extends Component {
         schema: {},
         uiSchema: {},
         formData: {},
+        formDisabled: false
     }
 
     componentDidMount = () => {
@@ -43,6 +45,10 @@ class DjangoForm extends Component {
             toast.error("Something went wrong...");
         }
 
+        this.setState({
+            formDisabled: true
+        })
+
         const response = await fetch(HOST + "/blog/posts/1/",
             {
                 headers: {
@@ -63,14 +69,16 @@ class DjangoForm extends Component {
 
             toast.success("Success!");
             this.setState({
-                formData: event.formData
+                formData: event.formData,
+                formDisabled: false
             })
 
         } else {
 
             toast.error("Something went wrong...");
             this.setState({
-                formData: this.state.formData
+                formData: this.state.formData,
+                formDisabled: false
             })
 
         }
@@ -81,7 +89,7 @@ class DjangoForm extends Component {
 
     render() {
 
-        const { schema, uiSchema, formData } = this.state;
+        const { schema, uiSchema, formData, formDisabled } = this.state;
 
         if (!schema || !uiSchema || !formData) return
 
@@ -89,11 +97,14 @@ class DjangoForm extends Component {
             <Section>
                 <Container>
                     <Form
+                        disabled={formDisabled}
                         schema={schema}
                         uiSchema={uiSchema}
                         formData={formData}
                         onSubmit={this.handleFormSubmit}
-                    />
+                    >
+                        <SubmitButton disabled={formDisabled} />
+                    </Form>
                 </Container>
             </Section>
         )
