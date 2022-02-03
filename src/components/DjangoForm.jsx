@@ -60,9 +60,19 @@ class DjangoForm extends Component {
         const { status } = response;
 
         if (status && status === 200) {
+
             toast.success("Success!");
+            this.setState({
+                formData: event.formData
+            })
+
         } else {
+
             toast.error("Something went wrong...");
+            this.setState({
+                formData: this.state.formData
+            })
+
         }
 
         return response;
