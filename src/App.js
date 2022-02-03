@@ -1,7 +1,7 @@
 import React from 'react';
 import DjangoForm from './components/DjangoForm';
-import Container from './components/common/container';
-import Section from './components/common/section';
+import Container from './components/common/Container';
+import Section from './components/common/Section';
 import { ToastContainer } from 'react-toastify';
 import './App.css';
 
