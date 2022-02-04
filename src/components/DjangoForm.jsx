@@ -55,10 +55,6 @@ class DjangoForm extends Component {
                 },
                 method: "PUT",
                 body: JSON.stringify(event.formData)
-            })
-            .then((result) => result.json())
-            .then((result) => {
-                toast.error(result.non_field_errors[0]);
             });
 
         const { status } = response;
@@ -73,7 +69,17 @@ class DjangoForm extends Component {
 
         } else {
 
-            toast.error("Something went wrong...");
+            let errorMessage = 'Something went wrong...';
+
+            const errors = await response.json();
+
+            const { non_field_errors: errorsArray } = errors;
+
+            if (Array.isArray(errorsArray) && errorsArray.length) {
+                errorMessage = errorsArray[0];
+            }
+
+            toast.error("Error: " + errorMessage);
             this.setState({
                 formData: this.state.formData,
                 formDisabled: false
