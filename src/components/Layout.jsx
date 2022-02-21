@@ -17,7 +17,6 @@ const Layout = (props) => {
             <Navigation />
 
             <main>
-                {console.log(props.children)}
                 {props.children}
             </main>
         </div>

@@ -93,8 +93,6 @@ export const login = (email, password) => async dispatch => {
     try {
         const response = await axios.post(`${HOST}/auth/jwt/create/`, body, config);
 
-        console.log(response);
-
         dispatch({
             type: LOGIN_SUCCESS,
             payload: response.data
