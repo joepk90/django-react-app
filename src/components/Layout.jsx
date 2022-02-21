@@ -1,18 +1,11 @@
 import React from 'react';
-import Container from './../components/common/Container';
-import Section from './../components/common/Section';
+import Navigation from './../components/Navigation';
 
 const Layout = (props) => {
     return (
 
         <div>
-            <header className="App-header">
-                <Section>
-                    <Container>
-                        <h1>Django React App - Form Example</h1>
-                    </Container>
-                </Section>
-            </header>
+            <Navigation />
 
             <main>
                 {console.log(props.children)}
