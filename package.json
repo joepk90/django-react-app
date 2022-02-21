@@ -37,8 +37,14 @@
   },
   "devDependencies": {
     "@rjsf/core": "^3.2.1",
+    "axios": "^0.26.0",
     "bootstrap": "^4.6.0",
     "node-sass": "^7.0.1",
-    "react-toastify": "^8.1.0"
+    "react-redux": "^7.2.6",
+    "react-router-dom": "^6.2.1",
+    "react-toastify": "^8.1.0",
+    "redux": "^4.1.2",
+    "redux-devtools": "^3.7.0",
+    "redux-thunk": "^2.4.1"
   }
 }
