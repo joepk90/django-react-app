@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import Section from '../components/common/Section';
 import Container from '../components/common/Container';
+import { connect } from 'react-redux';
+import { login } from '../actions/auth';
 
-const Login = () => {
+const Login = ({ login }) => {
 
     const [formData, setFormData] = useState({
         email: '',
@@ -12,8 +14,11 @@ const Login = () => {
     const { email, password } = formData;
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value })
+
     const onSubmit = e => {
         e.preventDefault()
+
+        login(email, password)
 
     }
 
@@ -57,4 +62,7 @@ const Login = () => {
     )
 }
 
-export default Login;
+const mapStateToProps = state => ({
+})
+
+export default connect(null, { login })(Login);
