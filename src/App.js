@@ -1,34 +1,24 @@
 import React from 'react';
-import DjangoForm from './components/DjangoForm';
-import Container from './components/common/Container';
-import Section from './components/common/Section';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Layout from './components/Layout';
+import Home from './containers/Home';
+import Login from './containers/Login';
 import { ToastContainer } from 'react-toastify';
 import './App.css';
 
-function App() {
 
-  return (
-    <div className="App">
-      <ToastContainer />
-      <header className="App-header">
-        <Section>
-          <Container>
-            <h1>Django React App - Form Example</h1>
-          </Container>
-        </Section>
-      </header>
+const App = () => (
 
-      <main>
-        <Section>
-          <Container>
-            <DjangoForm />
-          </Container>
-        </Section>
-      </main>
+  <Router>
+    <ToastContainer />
+    <Layout>
+      <Routes>
+        <Route exact path="/" element={<Home />} />
+        <Route exact path="/login" element={<Login />} />
+      </Routes>
+    </Layout>
+  </Router>
 
-
-    </div>
-  );
-}
+);
 
 export default App;
