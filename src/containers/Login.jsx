@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { Navigate } from 'react-router-dom'
 import Section from '../components/common/Section';
 import Container from '../components/common/Container';
 import { connect } from 'react-redux';
 import { login } from '../actions/auth';
 
-const Login = ({ login }) => {
+
+
+const Login = ({ login, isAuthenticated }) => {
 
     const [formData, setFormData] = useState({
         email: '',
@@ -19,7 +22,10 @@ const Login = ({ login }) => {
         e.preventDefault()
 
         login(email, password)
+    }
 
+    if (isAuthenticated) {
+        return <Navigate replace to="/" />
     }
 
     // TODO setup django to drf_react_template library to generate login form schema 
@@ -63,6 +69,7 @@ const Login = ({ login }) => {
 }
 
 const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
 })
 
-export default connect(null, { login })(Login);
+export default connect(mapStateToProps, { login })(Login);
