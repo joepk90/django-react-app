@@ -48,7 +48,7 @@ class DjangoForm extends Component {
             formDisabled: true
         })
 
-        const response = await fetch(HOST + "/blog/posts/1/",
+        await fetch(HOST + "/blog/posts/1/",
             {
                 headers: {
                     'Accept': 'application/json',
@@ -56,39 +56,36 @@ class DjangoForm extends Component {
                 },
                 method: "PUT",
                 body: JSON.stringify(event.formData)
+            })
+            .then(async (results) => {
+
+                const { ok } = results;
+
+                const data = await results.json();
+
+                if (ok === false || !data || isEmpty(data)) {
+                    let errorMessage = !data.detail ? 'Something went wrong!' : data.detail;
+                    throw new Error(errorMessage);
+                }
+
+                toast.success("Success!");
+                return this.setState({
+                    formData: data,
+                    formDisabled: false
+                })
+
+            })
+            .catch(async (err) => {
+
+                toast.error(err.toString());
+                this.setState({
+                    formData: this.state.formData,
+                    formDisabled: false
+                })
+
             });
 
-        const { status } = response;
-
-        if (status && status === 200) {
-
-            toast.success("Success!");
-            this.setState({
-                formData: event.formData,
-                formDisabled: false
-            })
-
-        } else {
-
-            let errorMessage = 'Something went wrong...';
-
-            const errors = await response.json();
-
-            const { non_field_errors: errorsArray } = errors;
-
-            if (Array.isArray(errorsArray) && errorsArray.length) {
-                errorMessage = errorsArray[0];
-            }
-
-            toast.error("Error: " + errorMessage);
-            this.setState({
-                formData: this.state.formData,
-                formDisabled: false
-            })
-
-        }
-
-        return response;
+        return;
 
     }
 
