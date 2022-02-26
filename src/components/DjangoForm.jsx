@@ -99,6 +99,20 @@ class DjangoForm extends Component {
 
     }
 
+    renderAuthMessage = () => {
+
+        const { isAuthenticated } = this.props;
+
+        if (isAuthenticated) {
+            return '';
+        }
+
+        return (
+            <p>The post can be updated once an hour, by anyone. Login, to update it at any time.</p>
+        )
+
+    }
+
     renderLastUpdate = () => {
 
         const { last_update: lastUpdate } = this.state.formData;
@@ -118,7 +132,7 @@ class DjangoForm extends Component {
 
 
         return (
-            <p>The post can be updated once an hour, by anyone. The last update was on:<br /> {date.toString()} at {time.toString()}.</p>
+            <p>The last update was at:<br /> {date.toString()} at {time.toString()}.</p>
         )
     }
 
@@ -132,17 +146,19 @@ class DjangoForm extends Component {
         return (
             <React.Fragment>
 
-                {this.renderLastUpdate()}
-
                 <Form
                     disabled={formDisabled}
                     schema={schema}
                     uiSchema={uiSchema}
                     formData={formData}
                     onSubmit={this.handleFormSubmit}
+                    className="py-3"
                 >
                     <SubmitButton disabled={formDisabled} />
                 </Form>
+
+                {this.renderAuthMessage()}
+                {this.renderLastUpdate()}
 
             </React.Fragment>
         )
