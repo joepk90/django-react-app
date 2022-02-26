@@ -48,12 +48,20 @@ class DjangoForm extends Component {
             formDisabled: true
         })
 
+        const headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+
+        const accessToken = localStorage.getItem('access');
+
+        if (accessToken) {
+            headers.Authorization = `JWT ${localStorage.getItem('access')}`;
+        }
+
         await fetch(HOST + "/blog/posts/1/",
             {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
+                headers: headers,
                 method: "PUT",
                 body: JSON.stringify(event.formData)
             })
