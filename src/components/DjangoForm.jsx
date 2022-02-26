@@ -3,6 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SubmitButton from './SubmitButton';
 import Form from "@rjsf/core";
+import { isEmpty } from '../utilties/objects';
 
 // .env: REACT_APP_API_URL=http://domain.com
 const HOST = process.env.REACT_APP_API_URL
@@ -118,9 +119,8 @@ class DjangoForm extends Component {
 
         const { schema, uiSchema, formData, formDisabled } = this.state;
 
-        if (!schema || !uiSchema || !formData) return
-
-
+        if (!schema || !uiSchema || !formData) return ''
+        if (isEmpty(schema) || isEmpty(uiSchema) || isEmpty(formData)) return ''
 
         return (
             <React.Fragment>
