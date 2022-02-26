@@ -12,30 +12,20 @@ import {
     LOGOUT
 } from './types';
 
-// .env: REACT_APP_API_URL=http://domain.com
-const HOST = process.env.REACT_APP_API_URL
-
 export const checkAuthenticated = () => async dispatch => {
-    if (localStorage.getItem('access')) {
 
-        try {
+    try {
 
-            await verifyAccessToken();
+        await verifyAccessToken();
 
-            dispatch({
-                type: AUTHENTICATED_SUCCESS,
-            })
+        dispatch({
+            type: AUTHENTICATED_SUCCESS,
+        })
 
-        } catch (err) {
+    } catch (err) {
 
-            // console.log(err);
+        // console.log(err);
 
-            dispatch({
-                type: AUTHENTICATED_FAIL,
-            })
-        }
-
-    } else {
         dispatch({
             type: AUTHENTICATED_FAIL,
         })
@@ -44,36 +34,23 @@ export const checkAuthenticated = () => async dispatch => {
 
 export const load_user = () => async dispatch => {
 
-    // TODO use funtion to handle this
-    if (localStorage.getItem('access')) {
+    try {
 
+        const response = await getCurrentUser();
 
+        dispatch({
+            type: USER_LOADED_SUCCESS,
+            payload: response.data
+        })
 
-        try {
+    } catch (err) {
 
-            const response = await getCurrentUser();
+        // console.log(err);
 
-            dispatch({
-                type: USER_LOADED_SUCCESS,
-                payload: response.data
-            })
-
-        } catch (err) {
-
-            // console.log(err);
-
-            dispatch({
-                type: USER_LOADED_FAIL,
-            })
-        }
-
-    } else {
         dispatch({
             type: USER_LOADED_FAIL,
         })
     }
-
-
 
 }
 
