@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { getCurrentUser } from '../services/endpoints'
+
 
 import {
     LOGIN_SUCCESS,
@@ -48,17 +50,15 @@ export const checkAuthenticated = () => async dispatch => {
 }
 
 export const load_user = () => async dispatch => {
+
+    // TODO use funtion to handle this
     if (localStorage.getItem('access')) {
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `JWT ${localStorage.getItem('access')}`,
-                'Accept': 'application/json'
-            }
-        };
+
+
 
         try {
-            const response = await axios.get(`${HOST}/auth/users/me/`, config);
+
+            const response = await getCurrentUser();
 
             dispatch({
                 type: USER_LOADED_SUCCESS,
@@ -66,6 +66,9 @@ export const load_user = () => async dispatch => {
             })
 
         } catch (err) {
+
+            // console.log(err);
+
             dispatch({
                 type: USER_LOADED_FAIL,
             })
