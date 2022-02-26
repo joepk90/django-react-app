@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getCurrentUser } from '../services/endpoints'
+import { getCurrentUser, verifyAccessToken } from '../services/endpoints'
 
 
 import {
@@ -17,26 +17,19 @@ const HOST = process.env.REACT_APP_API_URL
 
 export const checkAuthenticated = () => async dispatch => {
     if (localStorage.getItem('access')) {
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `JWT ${localStorage.getItem('access')}`,
-                'Accept': 'application/json'
-            }
-        };
-
-        const body = JSON.stringify({
-            token: localStorage.getItem('access')
-        })
 
         try {
-            const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/jwt/verify`, body, config);
+
+            await verifyAccessToken();
 
             dispatch({
                 type: AUTHENTICATED_SUCCESS,
             })
 
         } catch (err) {
+
+            // console.log(err);
+
             dispatch({
                 type: AUTHENTICATED_FAIL,
             })
