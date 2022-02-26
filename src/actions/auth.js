@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getCurrentUser, verifyAccessToken } from '../services/endpoints'
+import { getCurrentUser, verifyAccessToken, createAccessToken } from '../services/endpoints'
 
 
 import {
@@ -78,16 +78,10 @@ export const load_user = () => async dispatch => {
 }
 
 export const login = (email, password) => async dispatch => {
-    const config = {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    };
-
-    const body = JSON.stringify({ email, password });
 
     try {
-        const response = await axios.post(`${HOST}/auth/jwt/create/`, body, config);
+
+        const response = await createAccessToken(email, password)
 
         dispatch({
             type: LOGIN_SUCCESS,
@@ -96,6 +90,9 @@ export const login = (email, password) => async dispatch => {
 
         dispatch(load_user());
     } catch (err) {
+
+        // console.log(err);
+
         dispatch({
             type: LOGIN_FAIL,
         })

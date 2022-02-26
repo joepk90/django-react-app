@@ -1,6 +1,7 @@
 import axios from './service';
 import { getAccessToken } from '../utilties/auth';
 
+const AUTHENTICATE_CREATE = '/auth/jwt/create/'
 const AUTHENTICATE_VERIFY = '/auth/jwt/verify/'
 const USER_GET_SELF = '/auth/users/me/'
 
@@ -20,6 +21,24 @@ const authenticate = async () => {
     }
 
     return CONFIG;
+
+}
+
+export const createAccessToken = async (email, password) => {
+
+    if (!email || !password) {
+        throw new Error('Email or Password not provided.')
+    }
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    const body = JSON.stringify({ email, password });
+
+    return await axios.post(AUTHENTICATE_CREATE, body, config);
 
 }
 
