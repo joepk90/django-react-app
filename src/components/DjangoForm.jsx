@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { login } from '../actions/auth';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SubmitButton from './SubmitButton';
@@ -147,4 +149,9 @@ class DjangoForm extends Component {
     }
 }
 
-export default DjangoForm;
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+})
+
+
+export default connect(mapStateToProps, { login })(DjangoForm);
