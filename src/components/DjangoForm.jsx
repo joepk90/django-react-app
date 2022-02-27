@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SubmitButton from './SubmitButton';
 import Form from "@rjsf/core";
-import { updatePost } from '../services/blogEndpoints';
+import { getPostForm, updatePost } from '../services/blogEndpoints';
 import { isEmpty } from '../utilties/objects';
 
 // .env: REACT_APP_API_URL=http://domain.com
@@ -23,18 +23,35 @@ class DjangoForm extends Component {
 
         (async () => {
 
-            fetch(HOST + '/blog/forms/1/')
-                .then(results => results.json())
-                .then(data => {
+            try {
 
-                    const { formData, serializer } = data;
+                const response = await getPostForm(1);
 
-                    this.setState({
-                        schema: serializer.schema,
-                        uiSchema: serializer.uiSchema,
-                        formData: formData,
-                    })
-                });
+                const { data } = response;
+
+                if (!data || isEmpty(data)) {
+                    throw new Error(response);
+                }
+
+                const { formData, serializer } = data;
+
+                this.setState({
+                    schema: serializer.schema,
+                    uiSchema: serializer.uiSchema,
+                    formData: formData,
+                })
+
+            } catch (err) {
+
+                // nested destructuring - extract the detail property:
+                // if other nested objects don't exist, set to an empty object (making detail undefined)
+                const { response: { data: { detail } = {} } = {} } = err;
+
+                let errorMessage = !detail ? 'Something went wrong!' : detail;
+
+                toast.error(errorMessage);
+
+            }
 
         })()
 

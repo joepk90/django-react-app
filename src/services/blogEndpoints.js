@@ -1,6 +1,7 @@
 import axios from './service';
 import { authenticate } from '../utilties/auth';
 
+const POST_FORM = '/blog/forms/'
 const POSTS = '/blog/posts/'
 
 const HEADERS = {
@@ -8,6 +9,10 @@ const HEADERS = {
     'Content-Type': 'application/json'
 }
 
+
+export const getPostForm = async (id) => {
+    return await axios.get(`${POST_FORM}${id}/`,);
+}
 
 export const updatePost = async (id, data) => {
 
