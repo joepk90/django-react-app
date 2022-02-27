@@ -5,6 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SubmitButton from './SubmitButton';
 import Form from "@rjsf/core";
+import { updatePost } from '../services/blogEndpoints';
 import { isEmpty } from '../utilties/objects';
 
 // .env: REACT_APP_API_URL=http://domain.com
@@ -50,50 +51,37 @@ class DjangoForm extends Component {
             formDisabled: true
         })
 
-        const headers = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
+        try {
 
-        const accessToken = localStorage.getItem('access');
+            const response = await updatePost(1, event.formData);
 
-        if (accessToken) {
-            headers.Authorization = `JWT ${localStorage.getItem('access')}`;
-        }
+            const { data } = response;
 
-        await fetch(HOST + "/blog/posts/1/",
-            {
-                headers: headers,
-                method: "PUT",
-                body: JSON.stringify(event.formData)
+            if (!data || isEmpty(data)) {
+                throw new Error(response);
+            }
+
+            toast.success("Success!");
+            return this.setState({
+                formData: data,
+                formDisabled: false
             })
-            .then(async (results) => {
 
-                const { ok } = results;
+        } catch (err) {
 
-                const data = await results.json();
+            // nested destructuring - extract the detail property:
+            // if other nested objects don't exist, set to an empty object (making detail undefined)
+            const { response: { data: { detail } = {} } = {} } = err;
 
-                if (ok === false || !data || isEmpty(data)) {
-                    let errorMessage = !data.detail ? 'Something went wrong!' : data.detail;
-                    throw new Error(errorMessage);
-                }
+            let errorMessage = !detail ? 'Something went wrong!' : detail;
 
-                toast.success("Success!");
-                return this.setState({
-                    formData: data,
-                    formDisabled: false
-                })
-
+            toast.error(errorMessage);
+            this.setState({
+                formData: this.state.formData,
+                formDisabled: false
             })
-            .catch(async (err) => {
 
-                toast.error(err.toString());
-                this.setState({
-                    formData: this.state.formData,
-                    formDisabled: false
-                })
-
-            });
+        }
 
         return;
 
