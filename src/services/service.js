@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+// TODO find replacement for Axios
+
 // .env: REACT_APP_API_URL=http://domain.com
 const HOST = process.env.REACT_APP_API_URL
 
