@@ -1,27 +1,13 @@
 import axios from './service';
-import { getAccessToken } from '../utilties/auth';
+import { getAccessToken, authenticate } from '../utilties/auth';
 
 const AUTHENTICATE_CREATE = '/auth/jwt/create/'
 const AUTHENTICATE_VERIFY = '/auth/jwt/verify/'
 const USER_GET_SELF = '/auth/users/me/'
 
-const CONFIG = {
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    }
-}
-
-const authenticate = async () => {
-
-    const accessToken = await getAccessToken();
-
-    if (accessToken) {
-        CONFIG.headers.Authorization = `JWT ${accessToken}`;
-    }
-
-    return CONFIG;
-
+const HEADERS = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
 }
 
 export const createAccessToken = async (email, password) => {
@@ -31,9 +17,7 @@ export const createAccessToken = async (email, password) => {
     }
 
     const config = {
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        headers: HEADERS
     };
 
     const body = JSON.stringify({ email, password });
@@ -54,11 +38,16 @@ export const verifyAccessToken = async () => {
         token: accessToken
     })
 
-    const config = await authenticate(CONFIG);
+    const headers = await authenticate(HEADERS);
+    const config = { headers }
+
     return await axios.post(AUTHENTICATE_VERIFY, body, config);
 }
 
 export const getCurrentUser = async () => {
-    const config = await authenticate(CONFIG)
+
+    const headers = await authenticate(HEADERS);
+    const config = { headers }
+
     return await axios.get(USER_GET_SELF, config);
 }
