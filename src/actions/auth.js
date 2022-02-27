@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getCurrentUser, verifyAccessToken, createAccessToken } from '../services/endpoints'
+import { getCurrentUser, verifyAccessToken, createAccessToken } from '../services/authEndpoints'
 
 
 import {
