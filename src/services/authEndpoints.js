@@ -1,14 +1,9 @@
-import axios from './service';
+import axios, { getDefaultHeaders } from './service';
 import { getAccessToken, authenticate } from '../utilties/auth';
 
 const AUTHENTICATE_CREATE = '/auth/jwt/create/'
 const AUTHENTICATE_VERIFY = '/auth/jwt/verify/'
 const USER_GET_SELF = '/auth/users/me/'
-
-const HEADERS = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-}
 
 export const createAccessToken = async (email, password) => {
 
@@ -16,9 +11,8 @@ export const createAccessToken = async (email, password) => {
         throw new Error('Email or Password not provided.')
     }
 
-    const config = {
-        headers: HEADERS
-    };
+    const headers = getDefaultHeaders();
+    const config = { headers }
 
     const body = JSON.stringify({ email, password });
 
@@ -38,7 +32,8 @@ export const verifyAccessToken = async () => {
         token: accessToken
     })
 
-    const headers = await authenticate(HEADERS);
+    const defaultHeaders = getDefaultHeaders();
+    const headers = await authenticate(defaultHeaders);
     const config = { headers }
 
     return await axios.post(AUTHENTICATE_VERIFY, body, config);
@@ -46,7 +41,8 @@ export const verifyAccessToken = async () => {
 
 export const getCurrentUser = async () => {
 
-    const headers = await authenticate(HEADERS);
+    const defaultHeaders = getDefaultHeaders();
+    const headers = await authenticate(defaultHeaders);
     const config = { headers }
 
     return await axios.get(USER_GET_SELF, config);

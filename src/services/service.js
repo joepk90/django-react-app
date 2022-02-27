@@ -18,6 +18,15 @@ axios.interceptors.response.use(null, error => {
 
 });
 
+export const getDefaultHeaders = () => {
+
+    return {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+
+}
+
 export default {
     get: axios.get,
     post: axios.post,
