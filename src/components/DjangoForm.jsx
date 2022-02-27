@@ -8,9 +8,6 @@ import Form from "@rjsf/core";
 import { getPostForm, updatePost } from '../services/blogEndpoints';
 import { isEmpty } from '../utilties/objects';
 
-// .env: REACT_APP_API_URL=http://domain.com
-const HOST = process.env.REACT_APP_API_URL
-
 class DjangoForm extends Component {
     state = {
         schema: {},
