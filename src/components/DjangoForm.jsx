@@ -28,10 +28,13 @@ const DjangoForm = ({ isAuthenticated }) => {
                     throw new Error(response);
                 }
 
-                const { formData, serializer } = data;
+                const { formData, serializer: {
+                    schema,
+                    uiSchema
+                } = {} } = data;
 
-                setSchema(serializer.schema)
-                setUISchema(serializer.uiSchema)
+                setSchema(schema)
+                setUISchema(uiSchema)
                 setFormData(formData)
 
             } catch (err) {
