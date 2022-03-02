@@ -15,35 +15,40 @@ const DjangoForm = ({ isAuthenticated }) => {
     const [formData, setFormData] = useState({});
     const [formDisabled, setFormDisabled] = useState(false);
 
-    useEffect(async () => {
+    useEffect(() => {
 
-        try {
+        (async () => {
+            try {
 
-            const response = await getPostForm(1);
+                const response = await getPostForm(1);
 
-            const { data } = response;
+                const { data } = response;
 
-            if (!data || isEmpty(data)) {
-                throw new Error(response);
+                if (!data || isEmpty(data)) {
+                    throw new Error(response);
+                }
+
+                const { formData, serializer } = data;
+
+                setSchema(serializer.schema)
+                setUISchema(serializer.uiSchema)
+                setFormData(formData)
+
+            } catch (err) {
+
+                // nested destructuring - extract the detail property:
+                // if other nested objects don't exist, set to an empty object (making detail undefined)
+                const { response: { data: { detail } = {} } = {} } = err;
+
+                let errorMessage = !detail ? 'Something went wrong!' : detail;
+
+                toast.error(errorMessage);
+
             }
+        })()
 
-            const { formData, serializer } = data;
 
-            setSchema(serializer.schema)
-            setUISchema(serializer.uiSchema)
-            setFormData(formData)
 
-        } catch (err) {
-
-            // nested destructuring - extract the detail property:
-            // if other nested objects don't exist, set to an empty object (making detail undefined)
-            const { response: { data: { detail } = {} } = {} } = err;
-
-            let errorMessage = !detail ? 'Something went wrong!' : detail;
-
-            toast.error(errorMessage);
-
-        }
 
 
     }, []);
