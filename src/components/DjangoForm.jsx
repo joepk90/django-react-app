@@ -140,7 +140,6 @@ const DjangoForm = ({ isAuthenticated }) => {
     }
 
 
-    if (!schema || !uiSchema || !formData) return ''
     if (isEmpty(schema) || isEmpty(uiSchema) || isEmpty(formData)) return ''
 
     return (
