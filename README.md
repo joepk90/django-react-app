@@ -5,6 +5,5 @@ Example React App setup update a single post and to authenticate with a Django b
 Live URL: https://django-react-app-pi.vercel.app/
 
 ### To Do
-- Convert DjangoForm to functional component
 - Setup Login form to use drf-react-template-framework form.
 - Relace Axios

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { login } from '../actions/auth';
 import { ToastContainer, toast } from 'react-toastify';
@@ -8,66 +8,18 @@ import Form from "@rjsf/core";
 import { getPostForm, updatePost } from '../services/blogEndpoints';
 import { isEmpty } from '../utilties/objects';
 
-class DjangoForm extends Component {
-    state = {
-        schema: {},
-        uiSchema: {},
-        formData: {},
-        formDisabled: false
-    }
+const DjangoForm = ({ isAuthenticated }) => {
 
-    componentDidMount = () => {
+    const [schema, setSchema] = useState({});
+    const [uiSchema, setUISchema] = useState({});
+    const [formData, setFormData] = useState({});
+    const [formDisabled, setFormDisabled] = useState(false);
 
-        (async () => {
-
-            try {
-
-                const response = await getPostForm(1);
-
-                const { data } = response;
-
-                if (!data || isEmpty(data)) {
-                    throw new Error(response);
-                }
-
-                const { formData, serializer } = data;
-
-                this.setState({
-                    schema: serializer.schema,
-                    uiSchema: serializer.uiSchema,
-                    formData: formData,
-                })
-
-            } catch (err) {
-
-                // nested destructuring - extract the detail property:
-                // if other nested objects don't exist, set to an empty object (making detail undefined)
-                const { response: { data: { detail } = {} } = {} } = err;
-
-                let errorMessage = !detail ? 'Something went wrong!' : detail;
-
-                toast.error(errorMessage);
-
-            }
-
-        })()
-
-
-    }
-
-    handleFormSubmit = async (event) => {
-
-        if (!event || !event.formData) {
-            toast.error("Something went wrong...");
-        }
-
-        this.setState({
-            formDisabled: true
-        })
+    useEffect(async () => {
 
         try {
 
-            const response = await updatePost(1, event.formData);
+            const response = await getPostForm(1);
 
             const { data } = response;
 
@@ -75,11 +27,11 @@ class DjangoForm extends Component {
                 throw new Error(response);
             }
 
-            toast.success("Success!");
-            return this.setState({
-                formData: data,
-                formDisabled: false
-            })
+            const { formData, serializer } = data;
+
+            setSchema(serializer.schema)
+            setUISchema(serializer.uiSchema)
+            setFormData(formData)
 
         } catch (err) {
 
@@ -90,20 +42,15 @@ class DjangoForm extends Component {
             let errorMessage = !detail ? 'Something went wrong!' : detail;
 
             toast.error(errorMessage);
-            this.setState({
-                formData: this.state.formData,
-                formDisabled: false
-            })
 
         }
 
-        return;
 
-    }
+    }, []);
 
-    renderAuthMessage = () => {
 
-        const { isAuthenticated } = this.props;
+
+    const renderAuthMessage = () => {
 
         if (isAuthenticated) {
             return '';
@@ -115,9 +62,9 @@ class DjangoForm extends Component {
 
     }
 
-    renderLastUpdate = () => {
+    const renderLastUpdate = () => {
 
-        const { last_update: lastUpdate } = this.state.formData;
+        const { last_update: lastUpdate } = formData;
 
         if (!lastUpdate) return
 
@@ -138,34 +85,74 @@ class DjangoForm extends Component {
         )
     }
 
-    render() {
 
-        const { schema, uiSchema, formData, formDisabled } = this.state;
+    const handleFormSubmit = async (event) => {
 
-        if (!schema || !uiSchema || !formData) return ''
-        if (isEmpty(schema) || isEmpty(uiSchema) || isEmpty(formData)) return ''
+        if (!event || !event.formData) {
+            toast.error("Something went wrong...");
+        }
 
-        return (
-            <React.Fragment>
+        setFormDisabled(true);
 
-                <Form
-                    disabled={formDisabled}
-                    schema={schema}
-                    uiSchema={uiSchema}
-                    formData={formData}
-                    onSubmit={this.handleFormSubmit}
-                    className="py-3"
-                >
-                    <SubmitButton disabled={formDisabled} />
-                </Form>
+        try {
 
-                {this.renderAuthMessage()}
-                {this.renderLastUpdate()}
+            const response = await updatePost(1, event.formData);
 
-            </React.Fragment>
-        )
+            const { data } = response;
+
+            if (!data || isEmpty(data)) {
+                throw new Error(response);
+            }
+
+            toast.success("Success!");
+
+
+            setFormData(data)
+            setFormDisabled(false)
+
+        } catch (err) {
+
+            // nested destructuring - extract the detail property:
+            // if other nested objects don't exist, set to an empty object (making detail undefined)
+            const { response: { data: { detail } = {} } = {} } = err;
+
+            let errorMessage = !detail ? 'Something went wrong!' : detail;
+
+            toast.error(errorMessage);
+            setFormData(formData)
+            setFormDisabled(false)
+
+        }
+
+        return;
+
     }
+
+
+    if (!schema || !uiSchema || !formData) return ''
+    if (isEmpty(schema) || isEmpty(uiSchema) || isEmpty(formData)) return ''
+
+    return (
+        <React.Fragment>
+
+            <Form
+                disabled={formDisabled}
+                schema={schema}
+                uiSchema={uiSchema}
+                formData={formData}
+                onSubmit={handleFormSubmit}
+                className="py-3"
+            >
+                <SubmitButton disabled={formDisabled} />
+            </Form>
+
+            {renderAuthMessage()}
+            {renderLastUpdate()}
+
+        </React.Fragment>
+    )
 }
+
 
 const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated
