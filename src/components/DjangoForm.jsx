@@ -90,18 +90,23 @@ const DjangoForm = ({ isAuthenticated }) => {
         )
     }
 
-
-    const handleFormSubmit = async (event) => {
+    const handleFormChange = (event) => {
 
         if (!event || !event.formData) {
             toast.error("Something went wrong...");
         }
 
+        setFormData(event.formData)
+
+    }
+
+    const handleFormSubmit = async () => {
+
         setFormDisabled(true);
 
         try {
 
-            const response = await updatePost(1, event.formData);
+            const response = await updatePost(1, formData);
 
             const { data } = response;
 
@@ -145,6 +150,7 @@ const DjangoForm = ({ isAuthenticated }) => {
                 formData={formData}
                 onSubmit={handleFormSubmit}
                 className="py-3"
+                onChange={handleFormChange}
             >
                 <SubmitButton disabled={formDisabled} />
             </Form>
