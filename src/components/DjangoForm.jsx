@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { login } from '../actions/auth';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SubmitButton from './SubmitButton';
 import Form from "@rjsf/core";
@@ -128,8 +128,6 @@ const DjangoForm = ({ isAuthenticated }) => {
             setFormDisabled(false)
 
         }
-
-        return;
 
     }
 
