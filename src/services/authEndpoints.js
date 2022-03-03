@@ -5,6 +5,8 @@ const AUTHENTICATE_CREATE = '/auth/jwt/create/'
 const AUTHENTICATE_VERIFY = '/auth/jwt/verify/'
 const USER_GET_SELF = '/auth/users/me/'
 
+const LOGIN_FORM = '/auth/form/token/create/'
+
 export const createAccessToken = async (email, password) => {
 
     if (!email || !password) {
@@ -46,4 +48,12 @@ export const getCurrentUser = async () => {
     const config = { headers }
 
     return await axios.get(USER_GET_SELF, config);
+}
+
+export const getLoginForm = async () => {
+
+    const headers = getDefaultHeaders();
+    const config = { headers }
+
+    return await axios.get(LOGIN_FORM, config);
 }
