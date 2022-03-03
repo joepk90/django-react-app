@@ -54,7 +54,7 @@ export const load_user = () => async dispatch => {
 
 }
 
-export const login = (email, password) => async dispatch => {
+export const login = ({ email, password }) => async dispatch => {
 
     try {
 
@@ -66,13 +66,16 @@ export const login = (email, password) => async dispatch => {
         })
 
         dispatch(load_user());
-    } catch (err) {
 
-        // console.log(err);
+        return response;
+
+    } catch (err) {
 
         dispatch({
             type: LOGIN_FAIL,
         })
+
+        return err;
     }
 }
 

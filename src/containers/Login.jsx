@@ -1,67 +1,108 @@
-import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Form from "@rjsf/core";
 import Section from '../components/common/Section';
 import Container from '../components/common/Container';
 import { connect } from 'react-redux';
 import { login } from '../actions/auth';
-
-
+import { getLoginForm } from '../services/authEndpoints'
+import { isEmpty } from '../utilties/objects';
 
 const Login = ({ login, isAuthenticated }) => {
 
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    })
+    const [schema, setSchema] = useState({});
+    const [uiSchema, setUISchema] = useState({});
+    const [formData, setFormData] = useState({});
+    const [formDisabled, setFormDisabled] = useState(false);
 
-    const { email, password } = formData;
+    useEffect(() => {
 
-    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value })
+        (async () => {
 
-    const onSubmit = e => {
-        e.preventDefault()
+            // TODO setup try catch in case form endpoint fails
+            const response = await getLoginForm()
 
-        login(email, password)
+            const { data } = response;
+
+            const { serializer: {
+                schema,
+                uiSchema
+            } = {} } = data;
+
+            // delete the form title
+            delete schema['title'];
+
+            setSchema(schema)
+            setUISchema(uiSchema)
+
+            // if (!data || isEmpty(data)) {
+            //     throw new Error(response);
+            // }
+
+
+        })();
+
+    }, [])
+
+    const handleFormChange = (event) => {
+
+        if (!event || !event.formData) {
+            toast.error("Something went wrong...");
+        }
+
+        setFormData(event.formData)
+
     }
+
+    const handleFormSubmit = async () => {
+
+        setFormDisabled(true);
+        const res = await login(formData);
+
+        if (!res.status && res.status !== 200) {
+
+            const { response: { data: { detail } = {} } = {} } = res;
+            let errorMessage = !detail ? 'Something went wrong!' : detail;
+
+            toast.error(errorMessage);
+            setFormData(formData)
+            setFormDisabled(false)
+        }
+    }
+
 
     if (isAuthenticated) {
         return <Navigate replace to="/" />
     }
 
-    // TODO setup django to drf_react_template library to generate login form schema 
+    const renderForm = () => {
+
+        if (!schema || isEmpty(schema) || !uiSchema || isEmpty(uiSchema)) return '';
+
+        return (
+            <Form
+                disabled={formDisabled}
+                schema={schema}
+                uiSchema={uiSchema}
+                formData={formData}
+                onSubmit={handleFormSubmit}
+                onChange={handleFormChange}
+            >
+                <button className="btn btn-info" type="submt">Login</button>
+            </Form>
+        );
+
+    }
 
     return (
         <Section>
             <Container>
                 <h1>Sign In</h1>
                 <p>Sign into your Account</p>
-                <form onSubmit={e => onSubmit(e)}>
-                    <div className="form-group">
-                        <input
-                            type="email"
-                            className="form-control"
-                            placeholder='email'
-                            name='email'
-                            value={email}
-                            onChange={e => onChange(e)}
-                            required
-                        />
-                    </div>
 
-                    <div className="form-group">
-                        <input
-                            type="password"
-                            className="form-control"
-                            placeholder='password'
-                            name='password'
-                            value={password}
-                            onChange={e => onChange(e)}
-                            minLength='6'
-                            required
-                        />
-                    </div>
-                    <button className="btn btn-primary" type="submt">Login</button>
-                </form>
+                {renderForm()}
+
             </Container >
         </Section>
 
