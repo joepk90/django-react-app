@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom'
-import Section from '../components/common/Section';
-import Container from '../components/common/Container';
+import Section from '../components/common/section';
+import Container from '../components/common/container';
 import { connect } from 'react-redux';
 import { login } from '../actions/auth';
 
