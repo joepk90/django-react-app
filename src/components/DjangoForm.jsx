@@ -146,6 +146,7 @@ const DjangoForm = ({ isAuthenticated }) => {
         <React.Fragment>
 
             <Form
+                validator={true} // TODO setup validation
                 disabled={formDisabled}
                 schema={schema}
                 uiSchema={uiSchema}
